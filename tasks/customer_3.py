@@ -2,7 +2,9 @@ from enum import IntEnum
 import datetime as dt
 
 import pandas as pd
-
+import sys
+sys.path.append("../tasks")
+from tasks.expected_customer_behavior_2 import ExpectedCustomerBehavior
 
 class AtRisk(IntEnum):
     """
@@ -62,7 +64,19 @@ class Customer:
         self.transactions = transactions
         self.last_date = last_date
 
+        self.expected_customer_behavior = ExpectedCustomerBehavior(self.transactions,self.last_date)
+        quotient = self.expected_customer_behavior.rev_made//self.expected_customer_behavior.expected_rev_until_last_date
+        
+        risk_percentage = Customer.RISK_PERCENTAGES
+        for risk_conditions in risk_percentage.keys():
+            if ((quotient < risk_percentage[risk_conditions]['max']) and
+                    (quotient >= risk_percentage[risk_conditions]['min'])):
+                    self.risk = risk_conditions
+                    break
+        
+        self.at_risk =  self.risk
+
         # ########################
         # Your code goes here...
         # ########################
-        self.at_risk = AtRisk.UNKNOWN
+        #self.at_risk = AtRisk.UNKNOWN

@@ -1,1 +1,6 @@
-__pycache__
+*__pycache__*
+
+task_venv/
+
+*.ipynb
+*.cfg
